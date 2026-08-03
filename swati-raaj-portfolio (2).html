@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Swati Raaj — Data Analyst</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F0EFE8;
+    --paper-raised:#F7F6F1;
+    --ink:#16233B;
+    --ink-soft:#4B5568;
+    --teal:#1F6F63;
+    --teal-deep:#154F46;
+    --amber:#D98A2B;
+    --line:#D9D4C6;
+    --line-strong:#BFBAA9;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--amber);color:var(--ink);}
+
+  .wrap{max-width:1040px;margin:0 auto;padding:0 32px;}
+
+  a{color:inherit;}
+
+  /* subtle grid texture */
+  .paper-grid{
+    position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:36px 36px;
+    -webkit-mask-image:linear-gradient(to bottom, black, transparent 900px);
+    mask-image:linear-gradient(to bottom, black, transparent 900px);
+  }
+
+  /* ===== NAV ===== */
+  nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(240,239,232,.88);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;}
+  .brand{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;letter-spacing:.08em;
+    display:flex;align-items:center;gap:8px;
+  }
+  .brand .dot{width:7px;height:7px;border-radius:50%;background:var(--teal);
+    box-shadow:0 0 0 3px rgba(31,111,99,.15);}
+  .navlinks{display:flex;gap:28px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;}
+  .navlinks a{text-decoration:none;color:var(--ink-soft);position:relative;padding-bottom:4px;transition:color .2s;}
+  .navlinks a:hover, .navlinks a:focus-visible{color:var(--ink);}
+  .navlinks a::after{content:'';position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--amber);transition:width .25s;}
+  .navlinks a:hover::after{width:100%;}
+  @media (max-width:640px){.navlinks{display:none;}}
+
+  /* ===== HERO ===== */
+  header.hero{position:relative;z-index:1;padding:76px 0 40px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--teal-deep);
+    display:inline-flex;align-items:center;gap:10px;margin-bottom:22px;
+    border:1px solid var(--line-strong);padding:6px 12px;border-radius:100px;
+    background:var(--paper-raised);
+  }
+  h1{
+    font-family:'Fraunces',serif;font-weight:600;
+    font-size:clamp(40px,7vw,72px);line-height:1.02;letter-spacing:-.01em;
+    max-width:820px;
+  }
+  h1 em{font-style:italic;font-weight:450;color:var(--teal-deep);}
+  .role{
+    font-family:'Inter',sans-serif;font-size:clamp(16px,2.2vw,20px);
+    color:var(--ink-soft);max-width:600px;margin-top:20px;
+  }
+  .role b{color:var(--ink);font-weight:600;}
+
+  /* instrument panel gauges */
+  .panel{
+    margin-top:56px;
+    display:grid;grid-template-columns:repeat(3,1fr);
+    border:1px solid var(--line-strong);
+    background:var(--paper-raised);
+    border-radius:var(--radius);
+  }
+  .gauge-cell{
+    padding:26px 20px 22px;
+    display:flex;flex-direction:column;align-items:center;gap:10px;
+    border-right:1px solid var(--line);
+    position:relative;
+  }
+  .gauge-cell:last-child{border-right:none;}
+  .gauge-cell::before{
+    content:attr(data-tag);
+    position:absolute;top:10px;left:14px;
+    font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;
+    color:var(--line-strong);
+  }
+  svg.gauge{width:104px;height:104px;}
+  .gauge-track{fill:none;stroke:var(--line);stroke-width:8;}
+  .gauge-fill{fill:none;stroke:var(--teal);stroke-width:8;stroke-linecap:round;
+    stroke-dasharray:283;stroke-dashoffset:283;
+    transform:rotate(-90deg);transform-origin:52px 52px;
+    transition:stroke-dashoffset 1.4s cubic-bezier(.16,1,.3,1);}
+  .gauge-num{
+    font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:22px;
+    fill:var(--ink);
+  }
+  .gauge-label{
+    font-family:'Inter',sans-serif;font-size:12.5px;color:var(--ink-soft);
+    text-align:center;max-width:150px;
+  }
+  @media (max-width:640px){
+    .panel{grid-template-columns:1fr;}
+    .gauge-cell{border-right:none;border-bottom:1px solid var(--line);}
+    .gauge-cell:last-child{border-bottom:none;}
+  }
+
+  /* ===== SECTION SHELL ===== */
+  section{position:relative;z-index:1;padding:76px 0;border-top:1px solid var(--line);}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:36px;}
+  .sec-num{font-family:'IBM Plex Mono',monospace;color:var(--amber);font-size:13px;}
+  .sec-title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(26px,3.4vw,34px);}
+  .sec-sub{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-soft);
+    text-transform:uppercase;letter-spacing:.08em;margin-left:auto;align-self:center;}
+
+  /* ===== ABOUT ===== */
+  .about-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:56px;}
+  .about-grid p{font-size:17px;color:var(--ink-soft);max-width:60ch;}
+  .about-grid p + p{margin-top:16px;}
+  .spec-list{border-left:1px solid var(--line-strong);padding-left:22px;}
+  .spec-row{display:flex;justify-content:space-between;gap:12px;
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;padding:9px 0;
+    border-bottom:1px dashed var(--line);}
+  .spec-row span:first-child{color:var(--ink-soft);}
+  .spec-row span:last-child{text-align:right;}
+  @media (max-width:760px){.about-grid{grid-template-columns:1fr;}}
+
+  /* ===== SKILLS ===== */
+  .skill-groups{display:grid;grid-template-columns:repeat(2,1fr);gap:28px;}
+  .skill-block{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;}
+  .skill-block h3{
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--teal-deep);margin-bottom:14px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .skill-block h3::before{content:'';width:6px;height:6px;background:var(--amber);display:inline-block;}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{
+    font-family:'Inter',sans-serif;font-size:13px;padding:6px 12px;
+    border:1px solid var(--line-strong);border-radius:100px;background:var(--paper);
+    color:var(--ink);transition:.2s;
+  }
+  .chip:hover{background:var(--teal);color:#fff;border-color:var(--teal);}
+  @media (max-width:640px){.skill-groups{grid-template-columns:1fr;}}
+
+  /* ===== PROJECTS ===== */
+  .case{
+    border:1px solid var(--line-strong);background:var(--paper-raised);
+    border-radius:var(--radius);margin-bottom:16px;overflow:hidden;
+  }
+  .case-head{
+    display:flex;align-items:center;gap:18px;padding:20px 24px;cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .case-id{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--amber);flex:0 0 auto;}
+  .case-title-wrap{flex:1;min-width:0;}
+  .case-title{font-family:'Fraunces',serif;font-weight:600;font-size:19px;}
+  .case-meta{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-soft);margin-top:3px;}
+  .case-stat{
+    font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:var(--teal-deep);
+    flex:0 0 auto;white-space:nowrap;
+  }
+  .case-chevron{flex:0 0 auto;width:18px;height:18px;color:var(--ink-soft);transition:transform .3s;}
+  .case.open .case-chevron{transform:rotate(180deg);}
+  .case-body{max-height:0;overflow:hidden;transition:max-height .4s ease;}
+  .case-body-inner{padding:0 24px 24px;border-top:1px solid var(--line);margin-top:0;}
+  .case-body-inner ul{list-style:none;margin-top:16px;display:flex;flex-direction:column;gap:9px;}
+  .case-body-inner li{
+    font-size:14.5px;color:var(--ink-soft);padding-left:18px;position:relative;
+  }
+  .case-body-inner li::before{content:'—';position:absolute;left:0;color:var(--teal);}
+  .case-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;}
+  .case-tag{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;
+    letter-spacing:.04em;padding:4px 9px;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);
+  }
+  @media (max-width:640px){
+    .case-head{flex-wrap:wrap;}
+    .case-stat{order:3;width:100%;padding-top:4px;}
+  }
+
+  /* ===== TIMELINE ===== */
+  .timeline{position:relative;padding-left:28px;}
+  .timeline::before{content:'';position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--line-strong);}
+  .tl-item{position:relative;padding-bottom:32px;}
+  .tl-item:last-child{padding-bottom:0;}
+  .tl-item::before{
+    content:'';position:absolute;left:-28px;top:4px;width:11px;height:11px;
+    border-radius:50%;background:var(--paper);border:2px solid var(--teal);
+  }
+  .tl-year{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--amber);}
+  .tl-title{font-family:'Fraunces',serif;font-weight:600;font-size:18px;margin-top:4px;}
+  .tl-sub{font-size:14px;color:var(--ink-soft);margin-top:3px;}
+
+  /* ===== CONTACT / FOOTER ===== */
+  footer{position:relative;z-index:1;background:var(--ink);color:var(--paper);padding:64px 0 40px;}
+  footer .sec-title{color:var(--paper);}
+  footer .sec-num{color:var(--amber);}
+  .label-card{
+    border:1px solid rgba(240,239,232,.25);padding:28px;border-radius:var(--radius);
+    display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;
+  }
+  .label-card p{color:rgba(240,239,232,.7);font-size:14px;max-width:44ch;margin-top:8px;}
+  .contact-links{display:flex;flex-direction:column;gap:10px;font-family:'IBM Plex Mono',monospace;font-size:13px;}
+  .contact-links a{text-decoration:none;color:var(--paper);border-bottom:1px solid rgba(240,239,232,.35);padding-bottom:2px;width:fit-content;transition:.2s;}
+  .contact-links a:hover{color:var(--amber);border-color:var(--amber);}
+  @media (max-width:640px){.label-card{grid-template-columns:1fr;}}
+  .foot-note{margin-top:28px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(240,239,232,.45);}
+
+  /* reveal on scroll */
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<div class="paper-grid"></div>
+
+<nav>
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span>SWATI RAAJ</div>
+    <div class="navlinks">
+      <a href="#about">About</a>
+      <a href="#skills">Instruments</a>
+      <a href="#projects">Case Files</a>
+      <a href="#timeline">Timeline</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Data Analyst · Pharmaceutical Engineering, IIT (BHU) Varanasi</div>
+    <h1>I turn raw, incomplete data<br>into <em>decisions people can act on.</em></h1>
+    <p class="role">Trained to measure things precisely as an engineer — now applying the same discipline to <b>SQL, Python, and Power BI</b> to find the signal in messy datasets.</p>
+
+    <div class="panel">
+      <div class="gauge-cell" data-tag="01">
+        <svg class="gauge" viewBox="0 0 104 104">
+          <circle class="gauge-track" cx="52" cy="52" r="45"></circle>
+          <circle class="gauge-fill" id="g1" cx="52" cy="52" r="45"></circle>
+          <text x="52" y="58" text-anchor="middle" class="gauge-num">85%</text>
+        </svg>
+        <div class="gauge-label">Forecasting model accuracy, predicting weekly application surges</div>
+      </div>
+      <div class="gauge-cell" data-tag="02">
+        <svg class="gauge" viewBox="0 0 104 104">
+          <circle class="gauge-track" cx="52" cy="52" r="45"></circle>
+          <circle class="gauge-fill" id="g2" cx="52" cy="52" r="45"></circle>
+          <text x="52" y="58" text-anchor="middle" class="gauge-num">20%</text>
+        </svg>
+        <div class="gauge-label">Shortlist conversion rate, up from 12% after dashboard redesign</div>
+      </div>
+      <div class="gauge-cell" data-tag="03">
+        <svg class="gauge" viewBox="0 0 104 104">
+          <circle class="gauge-track" cx="52" cy="52" r="45"></circle>
+          <circle class="gauge-fill" id="g3" cx="52" cy="52" r="45"></circle>
+          <text x="52" y="58" text-anchor="middle" class="gauge-num">95%</text>
+        </svg>
+        <div class="gauge-label">On-time session execution leading a 20-person team at TECHNEX'25</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2 class="sec-title">About</h2>
+      <span class="sec-sub">Field notes</span>
+    </div>
+    <div class="about-grid reveal">
+      <div>
+        <p>I'm a final-year B.Tech student in Pharmaceutical Engineering &amp; Technology at IIT (BHU) Varanasi, graduating in 2026. Pharma engineering trained me to work under tight tolerances — every measurement has to be defensible. I've carried that habit into data analytics.</p>
+        <p>As a Data Analyst Intern at StartupAccel, I built the pipelines, dashboards, and forecasting models that a growing team actually used to make weekly decisions — not just a notebook that ran once. I like problems that start messy: incomplete records, ambiguous requirements, a dataset nobody has cleaned yet.</p>
+      </div>
+      <div class="spec-list">
+        <div class="spec-row"><span>Base</span><span>Banka, Bihar, India</span>
+</div>
+        <div class="spec-row"><span>Focus</span><span>Business &amp; Predictive Analytics</span></div>
+        <div class="spec-row"><span>Tools</span><span>SQL · Python · Power BI</span></div>
+        <div class="spec-row"><span>Grad. Year</span><span>2026</span></div>
+        <div class="spec-row"><span>CGPA</span><span>7.62 / 10</span></div>
+        <div class="spec-row"><span>Status</span><span>Open to roles</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2 class="sec-title">Instrument Panel</h2>
+      <span class="sec-sub">Tools I reach for</span>
+    </div>
+    <div class="skill-groups reveal">
+      <div class="skill-block">
+        <h3>Languages &amp; Analysis</h3>
+        <div class="chips">
+          <span class="chip">SQL</span>
+          <span class="chip">Python</span>
+          <span class="chip">Machine Learning</span>
+          <span class="chip">Google Analytics</span>
+        </div>
+      </div>
+      <div class="skill-block">
+        <h3>Reporting &amp; Tools</h3>
+        <div class="chips">
+          <span class="chip">Power BI</span>
+          <span class="chip">MS Excel</span>
+          <span class="chip">Google Workspace</span>
+          <span class="chip">Figma</span>
+        </div>
+      </div>
+      <div class="skill-block">
+        <h3>Domains</h3>
+        <div class="chips">
+          <span class="chip">Predictive Analytics</span>
+          <span class="chip">BI Reporting</span>
+          <span class="chip">Data Modeling</span>
+        </div>
+      </div>
+      <div class="skill-block">
+        <h3>Applied On</h3>
+        <div class="chips">
+          <span class="chip">Workforce Analytics</span>
+          <span class="chip">Sales Analytics</span>
+          <span class="chip">Funnel Optimization</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2 class="sec-title">Case Files</h2>
+      <span class="sec-sub">Click to expand</span>
+    </div>
+
+    <div class="reveal">
+
+      <div class="case">
+        <div class="case-head" onclick="toggleCase(this)">
+          <span class="case-id">CF‑01</span>
+          <div class="case-title-wrap">
+            <div class="case-title">Startup Application Funnel Optimization</div>
+            <div class="case-meta">StartupAccel · SQL, Excel, Power BI</div>
+          </div>
+          <span class="case-stat">12% → 20%</span>
+          <svg class="case-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="case-body">
+          <div class="case-body-inner">
+            <ul>
+              <li>Built an automated SQL–Excel pipeline that cleaned 5,000+ applications, cutting preprocessing time by 30%.</li>
+              <li>Designed interactive Power BI dashboards tracking key KPIs, raising shortlist conversion from 12% to 20%.</li>
+              <li>Automated reviewer workload allocation, cutting review cycle time from 4.5 to 3.2 days.</li>
+              <li>Re-targeted outreach toward high-yield sources, boosting qualified leads by 18%.</li>
+            </ul>
+            <div class="case-tags"><span class="case-tag">SQL</span><span class="case-tag">Excel</span><span class="case-tag">Power BI</span><span class="case-tag">Process Automation</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="case">
+        <div class="case-head" onclick="toggleCase(this)">
+          <span class="case-id">CF‑02</span>
+          <div class="case-title-wrap">
+            <div class="case-title">ML-Based Application Surge Forecasting</div>
+            <div class="case-meta">StartupAccel · Regression, Power BI</div>
+          </div>
+          <span class="case-stat">85% accuracy</span>
+          <svg class="case-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="case-body">
+          <div class="case-body-inner">
+            <ul>
+              <li>Developed a regression-based forecasting model predicting weekly application surges at 85% accuracy.</li>
+              <li>Preprocessed large historical datasets with SQL and Excel; visualized results in Power BI for management review.</li>
+              <li>Gave the team a 2-week head start on resource allocation, preventing backlog and improving review efficiency by 25%.</li>
+            </ul>
+            <div class="case-tags"><span class="case-tag">Regression</span><span class="case-tag">Forecasting</span><span class="case-tag">Power BI</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="case">
+        <div class="case-head" onclick="toggleCase(this)">
+          <span class="case-id">CF‑03</span>
+          <div class="case-title-wrap">
+            <div class="case-title">Customer Churn Prediction</div>
+            <div class="case-meta">Random Forest · Precision / Recall / F1</div>
+          </div>
+          <span class="case-stat">Class-imbalance aware</span>
+          <svg class="case-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="case-body">
+          <div class="case-body-inner">
+            <ul>
+              <li>Framed customer churn as a classification problem and trained a Random Forest as the primary model.</li>
+              <li>Evaluated with precision, recall, and F1-score rather than raw accuracy, since churners were a minority class.</li>
+              <li>Used this project as the technical anchor in interview conversations on model evaluation trade-offs.</li>
+            </ul>
+            <div class="case-tags"><span class="case-tag">Python</span><span class="case-tag">Random Forest</span><span class="case-tag">Classification</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="case">
+        <div class="case-head" onclick="toggleCase(this)">
+          <span class="case-id">CF‑04</span>
+          <div class="case-title-wrap">
+            <div class="case-title">HR Attrition Prediction &amp; Analytics</div>
+            <div class="case-meta">Logistic Regression, Decision Tree, Power BI</div>
+          </div>
+          <span class="case-stat">1,470 records</span>
+          <svg class="case-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="case-body">
+          <div class="case-body-inner">
+            <ul>
+              <li>Cleaned a 1,470-row HR dataset, removing four non-informative columns and binarizing the target variable.</li>
+              <li>Engineered income-band, tenure-ratio, and promotion-gap features for deeper analysis.</li>
+              <li>Trained Logistic Regression and Decision Tree models on standardized and encoded data.</li>
+              <li>Visualized a 16% attrition rate by department, overtime frequency, and income in Power BI to guide retention strategy.</li>
+            </ul>
+            <div class="case-tags"><span class="case-tag">Python</span><span class="case-tag">Feature Engineering</span><span class="case-tag">Power BI</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="case">
+        <div class="case-head" onclick="toggleCase(this)">
+          <span class="case-id">CF‑05</span>
+          <div class="case-title-wrap">
+            <div class="case-title">Amazon E‑Commerce Sales Dashboard</div>
+            <div class="case-meta">Power BI · Profitability Analysis</div>
+          </div>
+          <span class="case-stat">+9% margin</span>
+          <svg class="case-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="case-body">
+          <div class="case-body-inner">
+            <ul>
+              <li>Identified low-margin SKUs and simulated pricing changes projected to lift profitability by 9%.</li>
+              <li>Automated weekly Excel reporting, saving the analytics team 6+ hours per week.</li>
+              <li>Built a real-time Power BI dashboard tracking daily revenue, order trends, and region-wise performance.</li>
+            </ul>
+            <div class="case-tags"><span class="case-tag">Power BI</span><span class="case-tag">Excel Automation</span><span class="case-tag">Pricing Analysis</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="reveal" style="margin-top:40px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);">In Development</span>
+        <span style="flex:1;height:1px;background:var(--line);"></span>
+      </div>
+
+      <div class="case">
+        <div class="case-head" onclick="toggleCase(this)">
+          <span class="case-id">CF‑06</span>
+          <div class="case-title-wrap">
+            <div class="case-title">Real-World Data Pipeline (Non-Kaggle Source)</div>
+            <div class="case-meta">Python, SQL · Self-sourced, not a Kaggle dataset</div>
+          </div>
+          <span class="case-stat" style="color:var(--amber);">Planned</span>
+          <svg class="case-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="case-body">
+          <div class="case-body-inner">
+            <ul>
+              <li>Pulling data directly from a public API instead of a pre-cleaned dataset, to practice handling real-world messiness end to end.</li>
+              <li>Will combine it with a second, mismatched source to build a proper ingestion and cleaning pipeline.</li>
+            </ul>
+            <div class="case-tags"><span class="case-tag">Python</span><span class="case-tag">API</span><span class="case-tag">Data Cleaning</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="case">
+        <div class="case-head" onclick="toggleCase(this)">
+          <span class="case-id">CF‑07</span>
+          <div class="case-title-wrap">
+            <div class="case-title">SQL-First Analysis Project</div>
+            <div class="case-meta">SQL · Multi-table schema</div>
+          </div>
+          <span class="case-stat" style="color:var(--amber);">Planned</span>
+          <svg class="case-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="case-body">
+          <div class="case-body-inner">
+            <ul>
+              <li>A project where SQL itself is the deliverable — window functions and CTEs over a multi-table schema — rather than a step before a dashboard.</li>
+            </ul>
+            <div class="case-tags"><span class="case-tag">SQL</span><span class="case-tag">Window Functions</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="case">
+        <div class="case-head" onclick="toggleCase(this)">
+          <span class="case-id">CF‑08</span>
+          <div class="case-title-wrap">
+            <div class="case-title">Stakeholder Brief: From Model to Decision</div>
+            <div class="case-meta">Business Writing · Built on the churn model</div>
+          </div>
+          <span class="case-stat" style="color:var(--amber);">Planned</span>
+          <svg class="case-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="case-body">
+          <div class="case-body-inner">
+            <ul>
+              <li>A short, non-technical write-up translating a model's findings — likely the churn prediction results — into a concrete stakeholder recommendation.</li>
+              <li>Built to show the analyst-to-business translation step, not just the modeling step: what should a retention budget actually do with this?</li>
+            </ul>
+            <div class="case-tags"><span class="case-tag">Business Communication</span><span class="case-tag">Storytelling</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="timeline">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <h2 class="sec-title">Timeline</h2>
+      <span class="sec-sub">Education &amp; leadership</span>
+    </div>
+    <div class="timeline reveal">
+      <div class="tl-item">
+        <div class="tl-year">2026</div>
+        <div class="tl-title">B.Tech, Pharmaceutical Engineering &amp; Technology</div>
+        <div class="tl-sub">IIT (BHU), Varanasi · CGPA 7.62</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">Nov 2024 – Mar 2025</div>
+        <div class="tl-title">Workshop Head, TECHNEX'25</div>
+        <div class="tl-sub">Led a 20-person team; scaled participation 600 → 2,000 (233%) and revenue ₹12L → ₹18L (50% YoY), with 95%+ on-time execution.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">May – Jul 2025</div>
+        <div class="tl-title">Data Analyst Intern, StartupAccel</div>
+        <div class="tl-sub">Built forecasting models and KPI dashboards; improved applicant conversion by 8%.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2025</div>
+        <div class="tl-title">2nd Position, Case‑A‑Thon 5.0</div>
+        <div class="tl-sub">Case study competition at Enviriosity 5.0, organized by SCEE‑DTU.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2021</div>
+        <div class="tl-title">CBSE (XII) — 88.80%</div>
+        <div class="tl-sub">Kendriya Vidyalaya, Kankarbagh, Patna</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">05</span>
+      <h2 class="sec-title">Contact</h2>
+    </div>
+    <div class="label-card reveal">
+      <div>
+        <div class="tl-year" style="color:var(--amber)">Specimen — open to opportunities</div>
+        <p>Best reached by email. Based in Banka, Bihar — open to relocating for the right role.</p>
+      </div>
+      <div class="contact-links">
+        <a href="mailto:14swati06raaj@gmail.com">14swati06raaj@gmail.com</a>
+        <a href="tel:+917004267114">+91 70042 67114</a>
+        <a href="#" style="opacity:.5">+ Add LinkedIn</a>
+        <a href="#" style="opacity:.5">+ Add GitHub</a>
+      </div>
+    </div>
+    <div class="foot-note">Built &amp; maintained by Swati Raaj — last updated 2026.</div>
+  </div>
+</footer>
+
+<script>
+  // animate gauges on load
+  window.addEventListener('load', () => {
+    const vals = {g1:85, g2:20, g3:95};
+    Object.keys(vals).forEach(id => {
+      const el = document.getElementById(id);
+      const circumference = 283;
+      const offset = circumference - (vals[id]/100)*circumference;
+      requestAnimationFrame(()=> { el.style.strokeDashoffset = offset; });
+    });
+  });
+
+  function toggleCase(headEl){
+    const caseEl = headEl.parentElement;
+    const body = caseEl.querySelector('.case-body');
+    const isOpen = caseEl.classList.contains('open');
+    document.querySelectorAll('.case.open').forEach(c => {
+      if(c !== caseEl){ c.classList.remove('open'); c.querySelector('.case-body').style.maxHeight = null; }
+    });
+    if(isOpen){
+      caseEl.classList.remove('open');
+      body.style.maxHeight = null;
+    } else {
+      caseEl.classList.add('open');
+      body.style.maxHeight = body.scrollHeight + 'px';
+    }
+  }
+
+  // scroll reveal
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // open first case by default on desktop
+  if(window.innerWidth > 640){
+    const first = document.querySelector('.case');
+    if(first){ toggleCase(first.querySelector('.case-head')); }
+  }
+</script>
+
+</body>
+</html>
